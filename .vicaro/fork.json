@@ -1,0 +1,16 @@
+{
+  "schema": 1,
+  "repository": "vicaroai/infisical",
+  "controllerRepository": "vicaroai/vicaro",
+  "controller": "975ec58c93dd7ac565821c94d1591194ea08cdf9",
+  "upstream": {
+    "version": "v0.166.5",
+    "published_at": "2026-10-12T20:28:28Z",
+    "image_pushed_at": "2026-10-12T20:57:45.865904Z",
+    "image": "infisical/infisical@sha256:188b8ece6bb64e02852e948856010b45de93361a9d2974a9722c66efe94d2a35",
+    "minimum_age_days": 7,
+    "commit": "188cf58173019bf0fe59972ed1c7ef715bec979c"
+  },
+  "inputHash": "e650140efcd31b0a8c3c15f616f039bf31b878dad0537696a4afddae8461fefb",
+  "contentDigest": "397592ea68f3de338315cf6d1aef0837a98c3941e0d83fff38a6b3cca5946a26"
+}

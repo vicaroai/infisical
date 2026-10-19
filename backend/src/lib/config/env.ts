@@ -368,6 +368,8 @@ const envSchema = z
     SITE_URL: zpStr(z.string().transform((val) => (val ? removeTrailingSlash(val) : val))).optional(),
     // Telemetry
     TELEMETRY_ENABLED: zodStrBool.default("true"),
+    // Vicaro community capability; does not change Enterprise entitlements.
+    VICARO_COMMUNITY_SHARING: zodStrBool.default("false"),
     POSTHOG_HOST: zpStr(z.string().optional().default("https://app.posthog.com")),
     POSTHOG_PROJECT_API_KEY: zpStr(z.string().optional().default("phc_swoSUd69FLA4ztGPkBhnNHDVbrssfPkuYEGCquN33FCX")),
     LOOPS_API_KEY: zpStr(z.string().optional()),

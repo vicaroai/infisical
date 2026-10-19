@@ -2,9 +2,10 @@ import { forwardRef, TextareaHTMLAttributes, useCallback, useRef } from "react";
 import * as PopoverPrimitive from "@radix-ui/react-popover";
 import { useNavigate } from "@tanstack/react-router";
 
+import { useCrossProjectSharingAvailability } from "@app/hooks/useCrossProjectSharingAvailability";
 import { createNotification } from "@app/components/notifications";
 import { ROUTE_PATHS } from "@app/const/routes";
-import { useOrganization, useProject, useProjectPermission, useSubscription } from "@app/context";
+import { useOrganization, useProject, useProjectPermission } from "@app/context";
 import { ProjectPermissionSecretActions } from "@app/context/ProjectPermissionContext/types";
 import { useDebounce, useToggle } from "@app/hooks";
 import { hasSecretReadValueOrDescribePermission } from "@app/lib/fn/permission";
@@ -61,13 +62,13 @@ export const InfisicalSecretInput = forwardRef<HTMLTextAreaElement, Props>(
     const value = propValue ?? "";
     const { currentProject } = useProject();
     const { currentOrg } = useOrganization();
-    const { subscription } = useSubscription();
-    const projectId = currentProject?.id || "";
+  const sharingAvailable = useCrossProjectSharingAvailability();
+      const projectId = currentProject?.id || "";
     const navigate = useNavigate({ from: ROUTE_PATHS.SecretManager.OverviewPage.path });
     const { permission } = useProjectPermission();
 
     const canCrossProjectShare =
-      subscription?.crossProjectSecretSharing && currentOrg?.allowCrossProjectSecretSharing;
+      sharingAvailable && currentOrg?.allowCrossProjectSecretSharing;
 
     const [debouncedValue] = useDebounce(value, 100);
 

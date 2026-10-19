@@ -16,6 +16,7 @@ import {
 } from "@app/ee/services/permission/project-permission";
 import { ProjectEvents } from "@app/ee/services/project-events/project-events-types";
 import { getReplicationFolderName } from "@app/ee/services/secret-replication/secret-replication-service";
+import { getConfig } from "@app/lib/config/env";
 import { BadRequestError, ForbiddenRequestError, NotFoundError } from "@app/lib/errors";
 import { requestMemoKeys } from "@app/lib/request-context/memo-keys";
 import { requestMemoize } from "@app/lib/request-context/request-memoizer";
@@ -155,7 +156,7 @@ export const secretImportServiceFactory = ({
     if (isCrossProjectImport) {
       const plan = await licenseService.getPlan(actorOrgId);
       const org = await orgDAL.findOrgById(actorOrgId);
-      if (!plan.crossProjectSecretSharing || !org?.allowCrossProjectSecretSharing) {
+      if ((!plan.crossProjectSecretSharing && !getConfig().VICARO_COMMUNITY_SHARING) || !org?.allowCrossProjectSecretSharing) {
         throw new ForbiddenRequestError({
           message: "Cross-project secret sharing is not enabled for this organization"
         });

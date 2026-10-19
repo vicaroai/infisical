@@ -46,6 +46,7 @@ const SanitizedSuperAdminSchema = z.object({
   pageFrameContent: z.string().nullable().optional(),
   // Populated on self-hosted instances when a newer release than the running version exists
   latestAvailableVersion: z.string().nullable().optional(),
+  vicaroCommunitySharing: z.boolean().optional(),
   // Super admin-only fields (omitted for non-super-admin callers)
   instanceId: z.string().uuid().optional(),
   createdAt: z.date().optional(),
@@ -113,6 +114,7 @@ export const registerAdminRouter = async (server: FastifyZodProvider) => {
             authConsentContent: config.authConsentContent,
             pageFrameContent: config.pageFrameContent,
             isPublicSecretSharingDisabled: serverEnvs.DISABLE_PUBLIC_SECRET_SHARING,
+          vicaroCommunitySharing: serverEnvs.VICARO_COMMUNITY_SHARING,
             isClickhouseAuditLogEnabled,
             latestAvailableVersion
           }
@@ -127,6 +129,7 @@ export const registerAdminRouter = async (server: FastifyZodProvider) => {
           isMigrationModeOn: serverEnvs.MAINTENANCE_MODE,
           isSecretScanningDisabled: serverEnvs.DISABLE_SECRET_SCANNING,
           isPublicSecretSharingDisabled: serverEnvs.DISABLE_PUBLIC_SECRET_SHARING,
+          vicaroCommunitySharing: serverEnvs.VICARO_COMMUNITY_SHARING,
           kubernetesAutoFetchServiceAccountToken: serverEnvs.KUBERNETES_AUTO_FETCH_SERVICE_ACCOUNT_TOKEN,
           paramsFolderSecretDetectionEnabled: serverEnvs.PARAMS_FOLDER_SECRET_DETECTION_ENABLED,
           isOfflineUsageReportsEnabled: hasOfflineLicense,

@@ -5,6 +5,7 @@ import {
   CrossProjectSecretSharingUpgradeIntent,
   useUpgradeGate
 } from "@app/components/license/UpgradeGate";
+import { useCrossProjectSharingAvailability } from "@app/hooks/useCrossProjectSharingAvailability";
 import { createNotification } from "@app/components/notifications";
 import { OrgPermissionCan } from "@app/components/permissions";
 import {
@@ -25,7 +26,6 @@ import {
   OrgPermissionActions,
   OrgPermissionSubjects,
   useOrganization,
-  useSubscription
 } from "@app/context";
 import { useUpdateOrg } from "@app/hooks/api/organization/queries";
 import { ProjectType } from "@app/hooks/api/projects/types";
@@ -35,8 +35,8 @@ import { ProjectTemplatesSection } from "./project-templates/ProjectTemplatesSec
 
 export const ProductSettingsPage = () => {
   const { currentOrg } = useOrganization();
+  const sharingAvailable = useCrossProjectSharingAvailability();
   const { mutateAsync: updateOrg, isPending } = useUpdateOrg();
-  const { subscription } = useSubscription();
   const { openUpgradeGate, upgradeGate } = useUpgradeGate();
 
   const handleToggle = async (state: boolean) => {
@@ -56,7 +56,7 @@ export const ProductSettingsPage = () => {
   const handleCrossProjectSharingToggle = async (state: boolean) => {
     if (!currentOrg?.id) return;
 
-    if (state && !subscription?.crossProjectSecretSharing) {
+    if (state && !sharingAvailable) {
       openUpgradeGate({
         intent: CrossProjectSecretSharingUpgradeIntent,
         paywallKey: "organization.product-settings"

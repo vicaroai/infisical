@@ -5,6 +5,7 @@ import { AxiosError } from "axios";
 import { InfoIcon, Key } from "lucide-react";
 import { z } from "zod";
 
+import { useCrossProjectSharingAvailability } from "@app/hooks/useCrossProjectSharingAvailability";
 import { createNotification } from "@app/components/notifications";
 import {
   Button,
@@ -87,6 +88,7 @@ export const CreateSecretImportForm = ({
 
   const { currentProject } = useProject();
   const { currentOrg } = useOrganization();
+  const sharingAvailable = useCrossProjectSharingAvailability();
   const environments = currentProject?.environments || [];
   const selectedEnvironment = watch("environment");
   const { subscription } = useSubscription();
@@ -94,7 +96,7 @@ export const CreateSecretImportForm = ({
   const { mutateAsync: createSecretImport, isPending: isCreatingImport } = useCreateSecretImport();
 
   const canCrossProjectShare =
-    subscription?.crossProjectSecretSharing && currentOrg?.allowCrossProjectSecretSharing;
+    sharingAvailable && currentOrg?.allowCrossProjectSecretSharing;
 
   const { data: receivedGrants = [] } = useListProjectFolderGrantsReceived(
     canCrossProjectShare ? projectId : ""

@@ -18,6 +18,7 @@ import {
   CrossProjectSecretSharingUpgradeIntent,
   useUpgradeGate
 } from "@app/components/license/UpgradeGate";
+import { useCrossProjectSharingAvailability } from "@app/hooks/useCrossProjectSharingAvailability";
 import { createNotification } from "@app/components/notifications";
 import { PermissionDeniedBanner } from "@app/components/permissions";
 import {
@@ -61,7 +62,6 @@ import {
   ProjectPermissionSub,
   useProject,
   useProjectPermission,
-  useSubscription
 } from "@app/context";
 import {
   TProjectFolderGrant,
@@ -204,8 +204,8 @@ export const CrossProjectSharingSection = () => {
   const [editData, setEditData] = useState<ShareSecretsEditData | null>(null);
   const [deleteTarget, setDeleteTarget] = useState<ProjectGroup | null>(null);
   const { currentProject } = useProject();
+  const sharingAvailable = useCrossProjectSharingAvailability();
   const { permission } = useProjectPermission();
-  const { subscription } = useSubscription();
   const { openUpgradeGate, upgradeGate } = useUpgradeGate();
   const canEditGrants =
     permission.can(
@@ -309,7 +309,7 @@ export const CrossProjectSharingSection = () => {
                       </IconButton>
                     </DropdownMenuTrigger>
                     <DropdownMenuContent align="end">
-                      {subscription?.crossProjectSecretSharing &&
+                      {sharingAvailable &&
                         (canEditGrants ||
                           projectGroup.grants.some((grant) =>
                             canRevokeGrant(grant.environmentSlug, grant.secretPath)
@@ -403,7 +403,7 @@ export const CrossProjectSharingSection = () => {
               variant="project"
               size="sm"
               onClick={() => {
-                if (!subscription?.crossProjectSecretSharing) {
+                if (!sharingAvailable) {
                   openUpgradeGate({
                     intent: CrossProjectSecretSharingUpgradeIntent,
                     paywallKey: "project.cross-project-sharing"

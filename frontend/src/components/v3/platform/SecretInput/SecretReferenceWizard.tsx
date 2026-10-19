@@ -7,7 +7,8 @@ import {
   LayersIcon
 } from "lucide-react";
 
-import { useOrganization, useProject, useSubscription } from "@app/context";
+import { useCrossProjectSharingAvailability } from "@app/hooks/useCrossProjectSharingAvailability";
+import { useOrganization, useProject } from "@app/context";
 import { useGetProjectFolders, useGetProjectSecrets, useGetWorkspaceById } from "@app/hooks/api";
 import { useListProjectFolderGrantsReceived } from "@app/hooks/api/projectFolderGrants";
 import { TProjectFolderGrantReceived } from "@app/hooks/api/projectFolderGrants/types";
@@ -48,11 +49,11 @@ export const SecretReferenceWizard = ({
 }: Props) => {
   const { currentProject } = useProject();
   const { currentOrg } = useOrganization();
-  const { subscription } = useSubscription();
+  const sharingAvailable = useCrossProjectSharingAvailability();
   const projectId = currentProject?.id || "";
 
   const canCrossProjectShare =
-    subscription?.crossProjectSecretSharing && currentOrg?.allowCrossProjectSecretSharing;
+    sharingAvailable && currentOrg?.allowCrossProjectSecretSharing;
 
   const [state, setState] = useState<WizardState>(INITIAL_STATE);
   const [highlightedIndex, setHighlightedIndex] = useState(0);
